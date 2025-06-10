@@ -60,3 +60,36 @@ The `TransactionController` includes methods to format and normalize transaction
 - **Wallet Transactions**
   - Determine the `from_wallet` and `to_wallet` names based on the wallet owner type (e.g., member, business wallet).
   - Normalize the `reference` field to human-readable formats.
+
+## WORKFLOW
+- **List Point Transactions**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/transactions/point] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch PointTransactions]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Load wallet.owner Relation]
+    E --> F[Paginate 15 Records]
+    F --> G[Map Transactions]
+    G --> H[Format Owner Name]
+    H --> I[Normalize Source]
+    I --> J[Format Other Fields]
+    J --> K[Reattach Formatted Collection]
+    K --> L[Render View]
+    L --> M[End]
+```    
+- **List Wallet Transactions**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/transactions/wallet] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch WalletTransactions]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Load Relations]
+    E --> F[Paginate 10 Records]
+    F --> G[Map Transactions]
+    G --> H[Format From/To Wallets]
+    H --> I[Normalize Reference]
+    I --> J[Format Other Fields]
+    J --> K[Render View]
+    K --> L[End]
+```    

@@ -59,3 +59,20 @@ The `DashboardController` generates data for the dashboard in the following ways
   - Retrieves all tiers.
   - Counts the number of members in each tier using the `TierServiceInterface`.
 
+## WORKFLOW
+- **System Dashboard**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/dashboard] --> B{Authenticate User}
+    B -->|Authorized| C[Generate Past 12 Months]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Query Earned Points]
+    E --> F[Query Redeemed Points]
+    F --> G[Query Expired Points]
+    G --> H[Format pointsChartData]
+    H --> I[Fetch Tiers]
+    I --> J[Count Members per Tier]
+    J --> K[Format tierChartData]
+    K --> L[Render Dashboard View]
+    L --> M[End]
+```    

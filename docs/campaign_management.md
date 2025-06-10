@@ -63,3 +63,77 @@ The `PromoCampaignServiceInterface` defines methods for handling promotional cam
   
 - **Get Campaign Report**
   - `getCampaignReport(int $campaignId): array`: Generate a report for a specific campaign.
+
+## WORKFLOW
+- **List Campaigns**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/campaigns] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch PromoCampaigns]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Load pointType Relation]
+    E --> F[Paginate Records]
+    F --> G[Render Index View]
+    G --> H[End]
+```    
+- **Show Create Campaign Form**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/campaigns/create] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch PointTypes]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Render Create Modal View]
+    E --> F[End]
+```    
+- **Create Campaign**:
+```mermaid
+graph TD
+    A[Start: POST /loyalty/campaigns] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid name, point_type_id, budget, dates| E[Call createCampaign]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Redirect with Success]
+    G --> H[End]
+```
+- **Show Edit Campaign Form**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/campaigns/edit] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Campaign]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Fetch PointTypes]
+    E --> F[Render Edit Modal View]
+    F --> G[End]
+```    
+
+- **Update Campaign**:
+```mermaid
+graph TD
+    A[Start: PUT /loyalty/campaigns] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid name, point_type_id, budget, dates, active| E[Update Campaign]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Redirect with Success]
+    G --> H[End]
+```
+- **Delete Campaign**:
+```mermaid
+graph TD
+    A[Start: DELETE /loyalty/campaigns] --> B{Authenticate User}
+    B -->|Authorized| C[Delete Campaign]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Redirect with Success]
+    E --> F[End]
+```    
+- **View Campaign Report**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/campaigns/report] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Campaign]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Call getCampaignReport]
+    E --> F[Render Report View]
+    F --> G[End]
+```    

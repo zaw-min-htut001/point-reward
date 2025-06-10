@@ -66,3 +66,63 @@ The `TierServiceInterface` defines methods for handling tiers:
   
 - **Get Next Tier**
   - `getNextTier(Member $member): ?Tier`: Get the next tier based on a member's total earned points.
+
+
+## WORKFLOW
+- **List Tiers**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/tiers] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Tiers]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Render Index View]
+    E --> F[End]
+```    
+- **Show Create Tier Form**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/tiers/create] --> B{Authenticate User}
+    B -->|Authorized| C[Render Create Modal View]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[End]
+```    
+- **Create Tier**:
+```mermaid
+graph TD
+    A[Start: POST /loyalty/tiers] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid name, min_points, multiplier, perks| E[Create Tier]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Redirect with Success]
+    G --> H[End]
+```    
+- **Show Edit Tier Form**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/tiers/edit] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Tier]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Render Edit Modal View]
+    E --> F[End]
+```    
+- **Update Tier**:
+```mermaid
+graph TD
+    A[Start: PUT /loyalty/tiers] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid name, min_points, multiplier, perks| E[Update Tier]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Redirect with Success]
+    G --> H[End]
+```    
+- **Delete Tier**:
+```mermaid
+graph TD
+    A[Start: DELETE /loyalty/tiers] --> B{Authenticate User}
+    B -->|Authorized| C[Delete Tier]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Redirect with Success]
+    E --> F[End]
+``` 

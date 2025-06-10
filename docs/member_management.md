@@ -68,3 +68,55 @@ The `TierServiceInterface` defines methods for handling tiers:
   
 - **Get Next Tier**
   - `getNextTier(Member $member): ?Tier`: Get the next tier based on a member's total earned points.
+
+## WORKFLOW
+- **Create Member**:
+```mermaid
+  graph TD
+    A[Start: POST /loyalty/members] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid memberable_type, id| E[Begin Transaction]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Fetch Memberable]
+    G --> H{Exists?}
+    H -->|Yes| I[Mark is_member = true]
+    H -->|No| J[Rollback]
+    I --> K[Create Member]
+    K --> L[Fetch PointType]
+    L --> M{Check PointType}
+    M -->|Exists| N[Create Primary Wallet]
+    M -->|Not Found| J
+    N --> O[Initialize PointsSummary]
+    O --> P[Commit Transaction]
+    P --> Q[Return Success]
+    J --> R[Rollback Transaction]
+    R --> S[Return Error]
+    Q --> T[End]
+    S --> T
+```    
+- **Render Member Dashboard**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/members/member_id/dashboard] --> B{Authenticate User}
+    B -->|Authorized| C{Can View Member?}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Yes| E[Fetch Member]
+    C -->|No| D
+    E --> F[Fetch Primary Wallet]
+    F --> G{PointsSummary Exists?}
+    G -->|Yes| H[Load Summary]
+    G -->|No| I[Create Summary]
+    H --> J[Get Current Tier]
+    I --> J
+    J --> K[Get Next Tier]
+    K --> L{Calculate Progress}
+    L -->|Next Tier Exists| M[Use Formula]
+    L -->|No Next Tier| N[Progress = 100]
+    M --> O[Fetch Last 10 Transactions]
+    N --> O
+    O --> P[Fetch Eligible Rewards]
+    P --> Q[Prepare Chart Data]
+    Q --> R[Render Dashboard View]
+    R --> S[End]
+```    

@@ -57,3 +57,82 @@ The `Reward` entity represents a reward in the system. Here are the key attribut
 - `stock`: Number of items available for the reward.
 - `min_tier_id`: Minimum tier ID required to redeem the reward (nullable).
 
+
+## WORKFLOW
+- **List Rewards**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/rewards] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Rewards]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Render Index View]
+    E --> F[End]
+```    
+- **Show Create Reward Form**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/rewards/create] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Tiers]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Render Create Modal View]
+    E --> F[End]
+```    
+- **Create Reward**:
+```mermaid
+graph TD
+    A[Start: POST /loyalty/rewards] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid name, point_cost, type, stock, min_tier_id| E[Create Reward]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Redirect with Success]
+    G --> H[End]
+```    
+- **Show Edit Reward Form**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/rewards/edit] --> B{Authenticate User}
+    B -->|Authorized| C[Fetch Reward]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Fetch Tiers]
+    E --> F[Render Edit Modal View]
+    F --> G[End]
+```    
+- **Update Reward**:
+```mermaid
+graph TD
+    A[Start: PUT /loyalty/rewards] --> B{Authenticate User}
+    B -->|Authorized| C{Validate Request}
+    B -->|Unauthorized| D[Return 403]
+    C -->|Valid name, point_cost, type, stock, min_tier_id| E[Update Reward]
+    C -->|Invalid| F[Return Validation Error]
+    E --> G[Redirect with Success]
+    G --> H[End]
+```    
+- **Delete Reward**:
+```mermaid
+graph TD
+    A[Start: DELETE /loyalty/rewards] --> B{Authenticate User}
+    B -->|Authorized| C[Delete Reward]
+    B -->|Unauthorized| D[Return 403]
+    C --> E[Redirect with Success]
+    E --> F[End]
+``` 
+- **View Reward Catalog**:
+```mermaid
+graph TD
+    A[Start: GET /loyalty/rewards/catalog] --> B{Authenticate User}
+    B -->|Yes| C[Fetch Wallet]
+    B -->|No| D[Set Wallet = null]
+    C --> E[Fetch Member]
+    E --> F[Query Rewards]
+    D --> F
+    F --> G[Filter: discount or stock > 0]
+    G --> H{Member Exists?}
+    H -->|Yes| I[Filter: min_tier_id <= member.tier_id or null]
+    H -->|No| J[Order by point_cost]
+    I --> J
+    J --> K[Paginate 9]
+    K --> L[Render Catalog View]
+    L --> M[End]
+```    
