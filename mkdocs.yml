@@ -1,0 +1,21 @@
+site_name: Member Points Loyalty Program
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Member Point System: member_point_system.md
+  - Campaign Management: campaign_management.md
+  - Tier Management: tier_management.md
+  - Point Type Management: point_type_management.md
+  - Member Management: member_management.md
+  - Transaction Management: transaction_management.md
+  - Reward Management: reward_management.md
+  - Dashboard Management: dashboard_management.md
+theme:
+  name: 'material'
+extra_javascript:
+  - https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
