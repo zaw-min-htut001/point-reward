@@ -12,7 +12,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="../member_point_system/">
+        <link rel="next" href="../point_type_management/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -292,85 +292,10 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      WORKFLOW
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../member_point_system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Member Point System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../campaign_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Campaign Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tier_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tier Management
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -448,6 +373,72 @@
   
   
     <li class="md-nav__item">
+      <a href="../wallet_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wallet Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campaign_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Campaign Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tier_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tier Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reward_management/" class="md-nav__link">
         
   
@@ -476,6 +467,28 @@
   
   <span class="md-ellipsis">
     Dashboard Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
     
   </span>
   
@@ -533,15 +546,6 @@
   <a href="#erd" class="md-nav__link">
     <span class="md-ellipsis">
       ERD
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      WORKFLOW
     </span>
   </a>
   
@@ -737,57 +741,6 @@ CAMPAIGN {
     timestamp updated_at
 }
 </code></pre>
-<h2 id="workflow">WORKFLOW</h2>
-<ul>
-<li><strong>Point earning</strong>:
-<pre class="mermaid"><code>graph TD
-    A[Start: POST /loyalty/wallets/earn/pos] --&gt; B{Validate Request}
-    B --&gt;|Valid points, sale_id| C[Fetch Member and Wallet]
-    B --&gt;|Invalid| D[Return Error]
-    C --&gt; E[Call TierService::applyTierMultiplier]
-    E --&gt; F{Query Tier based on total_earned}
-    F --&gt; G[Apply Multiplier]
-    G --&gt; H[Update Wallet Balance]
-    H --&gt; I[Update MemberPointsSummary]
-    I --&gt; J[Log PointTransaction]
-    J --&gt; K[Return Success]
-    K --&gt; L[End]</code></pre></li>
-<li><strong>Reward Redemption</strong>:
-<pre class="mermaid"><code>graph TD
-    A[Start: POST /loyalty/wallets/wallet_id/redeem] --&gt; B{Validate Request}
-    B --&gt;|Valid reward_id| C[Fetch Wallet and Reward]
-    B --&gt;|Invalid| D[Return Error]
-    C --&gt; E{Sufficient Points?}
-    E --&gt;|Yes| F{Tier Eligible?}
-    E --&gt;|No| G[Insufficient Points Error]
-    F --&gt;|Yes| H{Stock Available?}
-    F --&gt;|No| I[Ineligible Tier Error]
-    H --&gt;|Yes| J[Deduct Points]
-    H --&gt;|No| K[Out of Stock Error]
-    J --&gt; L[Update Reward Stock]
-    L --&gt; M[Log PointTransaction]
-    M --&gt; N[Apply Free Shipping if Gold]
-    N --&gt; O[Return Success]
-    O --&gt; P[End]</code></pre></li>
-<li><strong>Dashboard</strong>:
-<pre class="mermaid"><code>graph TD
-    A[Start: GET /loyalty/members/member_id/dashboard] --&gt; B{Authenticate User}
-    B --&gt;|Authorized| C[Fetch Member]
-    B --&gt;|Unauthorized| D[Return 403]
-    C --&gt; E[Fetch Primary Wallet]
-    E --&gt; F{Points Summary Exists?}
-    F --&gt;|Yes| G[Load Summary]
-    F --&gt;|No| H[Create Summary]
-    G --&gt; I[Get Current Tier]
-    H --&gt; I
-    I --&gt; J[Get Next Tier]
-    J --&gt; K[Calculate Progress]
-    K --&gt; L[Fetch Last 10 Transactions]
-    L --&gt; M[Fetch Eligible Rewards]
-    M --&gt; N[Prepare Chart Data]
-    N --&gt; O[Render Dashboard View]
-    O --&gt; P[End]</code></pre></li>
-</ul>
 
 
 

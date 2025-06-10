@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../transaction_management/">
+        <link rel="prev" href="../tier_management/">
       
       
         <link rel="next" href="../dashboard_management/">
@@ -238,72 +238,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../member_point_system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Member Point System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../campaign_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Campaign Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tier_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tier Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../point_type_management/" class="md-nav__link">
         
   
@@ -354,6 +288,72 @@
   
   <span class="md-ellipsis">
     Transaction Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wallet_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wallet Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campaign_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Campaign Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tier_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tier Management
     
   </span>
   
@@ -461,6 +461,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -482,6 +491,28 @@
   
   <span class="md-ellipsis">
     Dashboard Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
     
   </span>
   
@@ -556,6 +587,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
   
 </li>
       
@@ -648,6 +688,72 @@
 <li><code>type</code>: Type of the reward (e.g., discount, product).</li>
 <li><code>stock</code>: Number of items available for the reward.</li>
 <li><code>min_tier_id</code>: Minimum tier ID required to redeem the reward (nullable).</li>
+</ul>
+<h2 id="workflow">WORKFLOW</h2>
+<ul>
+<li><strong>List Rewards</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/rewards] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch Rewards]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Render Index View]
+    E --&gt; F[End]</code></pre></li>
+<li><strong>Show Create Reward Form</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/rewards/create] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch Tiers]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Render Create Modal View]
+    E --&gt; F[End]</code></pre></li>
+<li><strong>Create Reward</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/rewards] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid name, point_cost, type, stock, min_tier_id| E[Create Reward]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G[Redirect with Success]
+    G --&gt; H[End]</code></pre></li>
+<li><strong>Show Edit Reward Form</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/rewards/edit] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch Reward]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Fetch Tiers]
+    E --&gt; F[Render Edit Modal View]
+    F --&gt; G[End]</code></pre></li>
+<li><strong>Update Reward</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: PUT /loyalty/rewards] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid name, point_cost, type, stock, min_tier_id| E[Update Reward]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G[Redirect with Success]
+    G --&gt; H[End]</code></pre></li>
+<li><strong>Delete Reward</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: DELETE /loyalty/rewards] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Delete Reward]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Redirect with Success]
+    E --&gt; F[End]</code></pre></li>
+<li><strong>View Reward Catalog</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/rewards/catalog] --&gt; B{Authenticate User}
+    B --&gt;|Yes| C[Fetch Wallet]
+    B --&gt;|No| D[Set Wallet = null]
+    C --&gt; E[Fetch Member]
+    E --&gt; F[Query Rewards]
+    D --&gt; F
+    F --&gt; G[Filter: discount or stock &gt; 0]
+    G --&gt; H{Member Exists?}
+    H --&gt;|Yes| I[Filter: min_tier_id &lt;= member.tier_id or null]
+    H --&gt;|No| J[Order by point_cost]
+    I --&gt; J
+    J --&gt; K[Paginate 9]
+    K --&gt; L[Render Catalog View]
+    L --&gt; M[End]</code></pre></li>
 </ul>
 
 
