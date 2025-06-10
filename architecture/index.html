@@ -1,0 +1,848 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../member_point_system/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Architecture - Member Points Loyalty Program</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Member Points Loyalty Program" class="md-header__button md-logo" aria-label="Member Points Loyalty Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Member Points Loyalty Program
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Member Points Loyalty Program" class="md-nav__button md-logo" aria-label="Member Points Loyalty Program" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Member Points Loyalty Program
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Architecture
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Schema
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erd" class="md-nav__link">
+    <span class="md-ellipsis">
+      ERD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campaign_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Campaign Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tier_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tier Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../point_type_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Point Type Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transaction_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transaction Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reward_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Reward Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Dashboard Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#components" class="md-nav__link">
+    <span class="md-ellipsis">
+      Components
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Schema
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#erd" class="md-nav__link">
+    <span class="md-ellipsis">
+      ERD
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="architecture">Architecture</h1>
+<p>The Member Points Loyalty Program is a modular Laravel application (<code>Modules\DiscountManagement</code>) for managing loyalty points, tiers, rewards, and campaigns.</p>
+<h2 id="components">Components</h2>
+<ul>
+<li><strong>Entities</strong>:</li>
+<li><code>Member</code>: Polymorphic (<code>memberable_id</code>, <code>memberable_type</code>) linked to <code>Contact</code> or <code>BusinessUser</code>.</li>
+<li><code>Wallet</code>: Stores points (<code>balance</code>) with <code>point_type_id</code>, <code>is_primary</code>.</li>
+<li><code>PointType</code>: Defines points (<code>name</code>, <code>is_expirable</code>, <code>default_expiry_days</code>, <code>exchange_rate</code>).</li>
+<li><code>Reward</code>: Redeemable items (<code>point_cost</code>, <code>type</code>, <code>stock</code>, <code>min_tier_id</code>).</li>
+<li><code>Tier</code>: Tiers (<code>min_points</code>, <code>multiplier</code>, <code>perks</code>).</li>
+<li><code>MemberPointsSummary</code>: Tracks <code>total_earned</code>, <code>total_redeemed</code>, <code>total_expired</code>, <code>balance</code>.</li>
+<li><code>PointTransaction</code>: Logs changes (<code>amount</code>, <code>direction</code>, <code>transaction_type</code>, <code>meta</code>).</li>
+<li><code>Campaign</code>: Defines reward promotions (<code>name</code>, <code>start_date</code>, <code>end_date</code>).</li>
+<li><strong>Services</strong>:</li>
+<li><code>TierService</code>: Calculates tiers (<code>getMemberTier</code>, <code>getNextTier</code>).</li>
+<li><code>RewardService</code>: Manages redemption.</li>
+<li><strong>Controllers</strong>:</li>
+<li><code>PointTypeController</code>: Manages point types.</li>
+<li><code>MemberController</code>: Handles members and dashboard.</li>
+<li><code>WalletController</code>: Manages earning/redeeming points.</li>
+<li><code>TierController</code>: Tier CRUD.</li>
+<li><code>RewardController</code>: Reward CRUD.</li>
+<li><code>CampaignController</code>: Campaign management.</li>
+<li><code>TransactionController</code>: Transaction views.</li>
+<li><code>DashboardController</code>: System overview.</li>
+<li><strong>Views</strong>:</li>
+<li><code>point-types/*</code>: Point type management.</li>
+<li><code>members/*</code>: Member operations and dashboard.</li>
+<li><code>wallets/*</code>: Wallet actions.</li>
+<li><strong>Enums</strong>:</li>
+<li><code>TransactionType</code>: <code>EARN</code>, <code>REDEEM</code>, <code>REFUND</code>, <code>ADJUST</code>, <code>MINT</code>.</li>
+</ul>
+<h2 id="database-schema">Database Schema</h2>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>Key Columns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>members</code></td>
+<td><code>id</code>, <code>memberable_id</code>, <code>memberable_type</code>, <code>member_code</code>, <code>is_active</code></td>
+<td>Polymorphic members.</td>
+</tr>
+<tr>
+<td><code>wallets</code></td>
+<td><code>id</code>, <code>owner_id</code>, <code>owner_type</code>, <code>balance</code>, <code>point_type_id</code>, <code>is_primary</code>, <code>status</code></td>
+<td>Points storage.</td>
+</tr>
+<tr>
+<td><code>point_types</code></td>
+<td><code>id</code>, <code>name</code>, <code>is_expirable</code>, <code>default_expiry_days</code>, <code>exchange_rate</code></td>
+<td>Point definitions.</td>
+</tr>
+<tr>
+<td><code>rewards</code></td>
+<td><code>id</code>, <code>name</code>, <code>description</code>, <code>point_cost</code>, <code>type</code>, <code>stock</code>, <code>min_tier_id</code></td>
+<td>Redeemable items.</td>
+</tr>
+<tr>
+<td><code>tiers</code></td>
+<td><code>id</code>, <code>name</code>, <code>min_points</code>, <code>multiplier</code>, <code>perks</code></td>
+<td>Tier definitions.</td>
+</tr>
+<tr>
+<td><code>member_points_summaries</code></td>
+<td><code>id</code>, <code>member_id</code>, <code>point_type_id</code>, <code>total_earned</code>, <code>total_redeemed</code>, <code>total_expired</code>, <code>balance</code></td>
+<td>Points tracking.</td>
+</tr>
+<tr>
+<td><code>point_transactions</code></td>
+<td><code>id</code>, <code>wallet_id</code>, <code>point_type_id</code>, <code>amount</code>, <code>direction</code>, <code>transaction_type</code>, <code>source</code>, <code>description</code>, <code>meta</code></td>
+<td>Transaction logs.</td>
+</tr>
+<tr>
+<td><code>campaigns</code></td>
+<td><code>id</code>, <code>name</code>, <code>start_date</code>, <code>end_date</code></td>
+<td>Reward campaigns.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="erd">ERD</h2>
+<pre class="mermaid"><code>erDiagram
+    MEMBER ||--o{ WALLET : owns
+    MEMBER ||--o{ MEMBER_POINTS_SUMMARY : has
+    WALLET ||--o{ POINT_TRANSACTION : has
+    REWARD ||--o{ TIER : requires
+    POINT_TYPE ||--o{ WALLET : defines
+    CAMPAIGN ||--o{ REWARD : promotes</code></pre>
+<pre><code>MEMBER {
+    int id
+    int memberable_id
+    string memberable_type
+    string member_code
+    boolean is_active
+    timestamp created_at
+    timestamp updated_at
+}
+WALLET {
+    int id
+    int owner_id
+    string owner_type
+    float balance
+    int point_type_id
+    boolean is_primary
+    string status
+    timestamp created_at
+    timestamp updated_at
+}
+POINT_TYPE {
+    int id
+    string name
+    boolean is_expirable
+    int default_expiry_days
+    float exchange_rate
+    timestamp created_at
+    timestamp updated_at
+}
+REWARD {
+    int id
+    string name
+    string description
+    float point_cost
+    string type
+    int stock nullable
+    int min_tier_id nullable
+    timestamp created_at
+    timestamp updated_at
+}
+TIER {
+    int id
+    string name
+    float min_points
+    float multiplier
+    string perks nullable
+    timestamp created_at
+    timestamp updated_at
+}
+MEMBER_POINTS_SUMMARY {
+    int id
+    int member_id
+    int point_type_id
+    float total_earned
+    float total_redeemed
+    float total_expired
+    float balance
+    timestamp created_at
+    timestamp updated_at
+}
+POINT_TRANSACTION {
+    int id
+    int wallet_id
+    int point_type_id
+    float amount
+    string direction
+    string transaction_type
+    string source
+    string description nullable
+    json meta nullable
+    timestamp created_at
+    timestamp updated_at
+}
+CAMPAIGN {
+    int id
+    string name
+    date start_date
+    date end_date
+    timestamp created_at
+    timestamp updated_at
+}
+</code></pre>
+<h2 id="workflow">WORKFLOW</h2>
+<ul>
+<li><strong>Point earning</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets/earn/pos] --&gt; B{Validate Request}
+    B --&gt;|Valid points, sale_id| C[Fetch Member and Wallet]
+    B --&gt;|Invalid| D[Return Error]
+    C --&gt; E[Call TierService::applyTierMultiplier]
+    E --&gt; F{Query Tier based on total_earned}
+    F --&gt; G[Apply Multiplier]
+    G --&gt; H[Update Wallet Balance]
+    H --&gt; I[Update MemberPointsSummary]
+    I --&gt; J[Log PointTransaction]
+    J --&gt; K[Return Success]
+    K --&gt; L[End]</code></pre></li>
+<li><strong>Reward Redemption</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets/wallet_id/redeem] --&gt; B{Validate Request}
+    B --&gt;|Valid reward_id| C[Fetch Wallet and Reward]
+    B --&gt;|Invalid| D[Return Error]
+    C --&gt; E{Sufficient Points?}
+    E --&gt;|Yes| F{Tier Eligible?}
+    E --&gt;|No| G[Insufficient Points Error]
+    F --&gt;|Yes| H{Stock Available?}
+    F --&gt;|No| I[Ineligible Tier Error]
+    H --&gt;|Yes| J[Deduct Points]
+    H --&gt;|No| K[Out of Stock Error]
+    J --&gt; L[Update Reward Stock]
+    L --&gt; M[Log PointTransaction]
+    M --&gt; N[Apply Free Shipping if Gold]
+    N --&gt; O[Return Success]
+    O --&gt; P[End]</code></pre></li>
+<li><strong>Dashboard</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/members/member_id/dashboard] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch Member]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Fetch Primary Wallet]
+    E --&gt; F{Points Summary Exists?}
+    F --&gt;|Yes| G[Load Summary]
+    F --&gt;|No| H[Create Summary]
+    G --&gt; I[Get Current Tier]
+    H --&gt; I
+    I --&gt; J[Get Next Tier]
+    J --&gt; K[Calculate Progress]
+    K --&gt; L[Fetch Last 10 Transactions]
+    L --&gt; M[Fetch Eligible Rewards]
+    M --&gt; N[Prepare Chart Data]
+    N --&gt; O[Render Dashboard View]
+    O --&gt; P[End]</code></pre></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10.9.0/dist/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
