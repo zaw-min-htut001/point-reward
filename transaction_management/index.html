@@ -12,7 +12,7 @@
         <link rel="prev" href="../member_management/">
       
       
-        <link rel="next" href="../reward_management/">
+        <link rel="next" href="../wallet_management/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -238,72 +238,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../member_point_system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Member Point System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../campaign_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Campaign Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tier_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tier Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../point_type_management/" class="md-nav__link">
         
   
@@ -448,10 +382,85 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wallet_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wallet Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campaign_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Campaign Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tier_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tier Management
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -491,6 +500,28 @@
   
   <span class="md-ellipsis">
     Dashboard Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
     
   </span>
   
@@ -577,6 +608,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -654,6 +694,36 @@
 </li>
 <li>Determine the <code>from_wallet</code> and <code>to_wallet</code> names based on the wallet owner type (e.g., member, business wallet).</li>
 <li>Normalize the <code>reference</code> field to human-readable formats.</li>
+</ul>
+<h2 id="workflow">WORKFLOW</h2>
+<ul>
+<li><strong>List Point Transactions</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/transactions/point] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch PointTransactions]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Load wallet.owner Relation]
+    E --&gt; F[Paginate 15 Records]
+    F --&gt; G[Map Transactions]
+    G --&gt; H[Format Owner Name]
+    H --&gt; I[Normalize Source]
+    I --&gt; J[Format Other Fields]
+    J --&gt; K[Reattach Formatted Collection]
+    K --&gt; L[Render View]
+    L --&gt; M[End]</code></pre></li>
+<li><strong>List Wallet Transactions</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/transactions/wallet] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch WalletTransactions]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Load Relations]
+    E --&gt; F[Paginate 10 Records]
+    F --&gt; G[Map Transactions]
+    G --&gt; H[Format From/To Wallets]
+    H --&gt; I[Normalize Reference]
+    I --&gt; J[Format Other Fields]
+    J --&gt; K[Render View]
+    K --&gt; L[End]</code></pre></li>
 </ul>
 
 

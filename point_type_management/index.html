@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../tier_management/">
+        <link rel="prev" href="../architecture/">
       
       
         <link rel="next" href="../member_management/">
@@ -235,72 +235,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../member_point_system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Member Point System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../campaign_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Campaign Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tier_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tier Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -404,6 +338,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -463,6 +406,72 @@
   
   
     <li class="md-nav__item">
+      <a href="../wallet_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wallet Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campaign_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Campaign Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tier_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tier Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reward_management/" class="md-nav__link">
         
   
@@ -491,6 +500,28 @@
   
   <span class="md-ellipsis">
     Dashboard Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
     
   </span>
   
@@ -577,6 +608,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -594,7 +634,7 @@
 
 
 <h1 id="point-type-management">Point Type Management</h1>
-<p>The point type management module allows you to create, manage, and define different point types for the discount management system.</p>
+<p>The point type management module allows you to create, manage, and single point types for the member point system.</p>
 <h2 id="key-components">Key Components</h2>
 <h3 id="routes">Routes</h3>
 <p>The following routes are defined for managing point types:</p>
@@ -660,6 +700,58 @@
 </ul>
 <h3 id="services">Services</h3>
 <p>No specific services are directly related to the <code>PointTypeController</code>. However, the controller interacts with the <code>Wallet</code> entity to create a primary business wallet for the point type.</p>
+<h2 id="workflow">WORKFLOW</h2>
+<ul>
+<li><strong>Create Point Type</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/point-types] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid name, is_expirable, etc.| E{PointType Exists?}
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt;|Yes| G[Return Error: Only one allowed]
+    E --&gt;|No| H[Begin Transaction]
+    H --&gt; I[Create PointType]
+    I --&gt; J{Created Successfully?}
+    J --&gt;|Yes| K[Create Primary Business Wallet]
+    J --&gt;|No| L[Rollback Transaction]
+    K --&gt; M[Commit Transaction]
+    M --&gt; N[Return Success]
+    L --&gt; O[Return Error: Exists]
+    N --&gt; P[End]
+    O --&gt; P</code></pre></li>
+<li><strong>Update Point Type</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: PUT /loyalty/point-types/pointType_id] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid name, is_expirable, etc.| E[Begin Transaction]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G[Update PointType]
+    G --&gt; H{Update Successful?}
+    H --&gt;|Yes| I[Commit Transaction]
+    H --&gt;|No| J[Rollback Transaction]
+    I --&gt; K[Return Success]
+    J --&gt; L[Return Error]
+    K --&gt; M[End]
+    L --&gt; M</code></pre></li>
+<li><strong>Delete Point Type</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: DELETE /loyalty/point-types/pointType_id] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Fetch PointType}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E{Has Wallets or Transactions?}
+    E --&gt;|Yes| F[Return Error: Cannot delete]
+    E --&gt;|No| G[Begin Transaction]
+    G --&gt; H[Delete PointType]
+    H --&gt; I{Deletion Successful?}
+    I --&gt;|Yes| J[Commit Transaction]
+    I --&gt;|No| K[Rollback Transaction]
+    J --&gt; L[Return Success]
+    K --&gt; M[Return Error]
+    L --&gt; N[End]
+    M --&gt; N</code></pre></li>
+</ul>
 
 
 

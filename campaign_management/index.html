@@ -9,7 +9,7 @@
       
       
       
-        <link rel="prev" href="../member_point_system/">
+        <link rel="prev" href="../wallet_management/">
       
       
         <link rel="next" href="../tier_management/">
@@ -238,12 +238,78 @@
   
   
     <li class="md-nav__item">
-      <a href="../member_point_system/" class="md-nav__link">
+      <a href="../point_type_management/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Member Point System
+    Point Type Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transaction_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transaction Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wallet_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wallet Management
     
   </span>
   
@@ -351,6 +417,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -372,72 +447,6 @@
   
   <span class="md-ellipsis">
     Tier Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../point_type_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Point Type Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../member_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Member Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../transaction_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Transaction Management
     
   </span>
   
@@ -482,6 +491,28 @@
   
   <span class="md-ellipsis">
     Dashboard Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
     
   </span>
   
@@ -556,6 +587,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
   
 </li>
       
@@ -667,6 +707,70 @@
 <p><strong>Get Campaign Report</strong></p>
 </li>
 <li><code>getCampaignReport(int $campaignId): array</code>: Generate a report for a specific campaign.</li>
+</ul>
+<h2 id="workflow">WORKFLOW</h2>
+<ul>
+<li><strong>List Campaigns</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/campaigns] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch PromoCampaigns]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Load pointType Relation]
+    E --&gt; F[Paginate Records]
+    F --&gt; G[Render Index View]
+    G --&gt; H[End]</code></pre></li>
+<li><strong>Show Create Campaign Form</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/campaigns/create] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch PointTypes]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Render Create Modal View]
+    E --&gt; F[End]</code></pre></li>
+<li><strong>Create Campaign</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/campaigns] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid name, point_type_id, budget, dates| E[Call createCampaign]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G[Redirect with Success]
+    G --&gt; H[End]</code></pre></li>
+<li>
+<p><strong>Show Edit Campaign Form</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/campaigns/edit] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch Campaign]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Fetch PointTypes]
+    E --&gt; F[Render Edit Modal View]
+    F --&gt; G[End]</code></pre></p>
+</li>
+<li>
+<p><strong>Update Campaign</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: PUT /loyalty/campaigns] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid name, point_type_id, budget, dates, active| E[Update Campaign]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G[Redirect with Success]
+    G --&gt; H[End]</code></pre></p>
+</li>
+<li><strong>Delete Campaign</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: DELETE /loyalty/campaigns] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Delete Campaign]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Redirect with Success]
+    E --&gt; F[End]</code></pre></li>
+<li><strong>View Campaign Report</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/campaigns/report] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch Campaign]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Call getCampaignReport]
+    E --&gt; F[Render Report View]
+    F --&gt; G[End]</code></pre></li>
 </ul>
 
 

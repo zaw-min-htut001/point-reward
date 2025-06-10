@@ -12,6 +12,8 @@
         <link rel="prev" href="../reward_management/">
       
       
+        <link rel="next" href="../member_point_system/">
+      
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
@@ -236,72 +238,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../member_point_system/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Member Point System
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../campaign_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Campaign Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../tier_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Tier Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../point_type_management/" class="md-nav__link">
         
   
@@ -352,6 +288,72 @@
   
   <span class="md-ellipsis">
     Transaction Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../wallet_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Wallet Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../campaign_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Campaign Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tier_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Tier Management
     
   </span>
   
@@ -523,10 +525,41 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_point_system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Point System
+    
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -641,6 +674,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      WORKFLOW
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -717,6 +759,23 @@
 <li><strong>Tier Counts</strong></li>
 <li>Retrieves all tiers.</li>
 <li>Counts the number of members in each tier using the <code>TierServiceInterface</code>.</li>
+</ul>
+<h2 id="workflow">WORKFLOW</h2>
+<ul>
+<li><strong>System Dashboard</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/dashboard] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Generate Past 12 Months]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Query Earned Points]
+    E --&gt; F[Query Redeemed Points]
+    F --&gt; G[Query Expired Points]
+    G --&gt; H[Format pointsChartData]
+    H --&gt; I[Fetch Tiers]
+    I --&gt; J[Count Members per Tier]
+    J --&gt; K[Format tierChartData]
+    K --&gt; L[Render Dashboard View]
+    L --&gt; M[End]</code></pre></li>
 </ul>
 
 

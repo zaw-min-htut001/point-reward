@@ -9,10 +9,10 @@
       
       
       
-        <link rel="prev" href="../point_type_management/">
+        <link rel="prev" href="../transaction_management/">
       
       
-        <link rel="next" href="../transaction_management/">
+        <link rel="next" href="../campaign_management/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -20,7 +20,7 @@
     
     
       
-        <title>Member Management - Member Points Loyalty Program</title>
+        <title>Wallet Management - Member Points Loyalty Program</title>
       
     
     
@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#member-management" class="md-skip">
+        <a href="#wallet-management" class="md-skip">
           Skip to content
         </a>
       
@@ -98,7 +98,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Member Management
+              Wallet Management
             
           </span>
         </div>
@@ -257,6 +257,50 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../member_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Member Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transaction_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Transaction Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -274,7 +318,7 @@
   
   
   <span class="md-ellipsis">
-    Member Management
+    Wallet Management
     
   </span>
   
@@ -287,7 +331,7 @@
   
   
   <span class="md-ellipsis">
-    Member Management
+    Wallet Management
     
   </span>
   
@@ -373,50 +417,6 @@
   
 </nav>
       
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../transaction_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Transaction Management
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../wallet_management/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Wallet Management
-    
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -633,139 +633,184 @@
 
 
 
-<h1 id="member-management">Member Management</h1>
-<p>The member management module allows you to create, manage, and view member details, wallets, and dashboards.</p>
+<h1 id="wallet-management">Wallet Management</h1>
+<p>Manages wallet operations, including creation, point earning, redemption, refunds, adjustments, minting, and ledger display.</p>
 <h2 id="key-components">Key Components</h2>
 <h3 id="routes">Routes</h3>
-<p>The following routes are defined for managing members:</p>
+<p>The following routes are defined for managing wallet operations:</p>
 <ul>
-<li><code>GET /loyalty/members</code>: List all members.</li>
-<li><code>GET /loyalty/members/create</code>: Show form to create a new member.</li>
-<li><code>POST /loyalty/members</code>: Store a new member.</li>
-<li><code>GET /loyalty/members/{member}/wallets</code>: List wallets for a specific member.</li>
-<li><code>GET /loyalty/members/{member}/dashboard</code>: Show dashboard for a specific member.</li>
+<li><code>GET /loyalty/wallets</code>: List all wallets.</li>
+<li><code>POST /loyalty/wallets</code>: Create a new wallet.</li>
+<li><code>GET /loyalty/wallets/{wallet}/balance</code>: Get balance for a specific wallet.</li>
+<li><code>GET /loyalty/wallets/{member}/earn</code>: Show earn modal for a specific member.</li>
+<li><code>POST /loyalty/wallets/earn/erp</code>: Earn points from ERP.</li>
+<li><code>POST /loyalty/wallets/earn/pos</code>: Earn points from POS.</li>
+<li><code>POST /loyalty/wallets/earn/ecommerce</code>: Earn points from eCommerce.</li>
+<li><code>GET /loyalty/wallets/{wallet}/redeem</code>: Show redeem modal for a specific wallet.</li>
+<li><code>POST /loyalty/wallets/{wallet}/redeem</code>: Redeem points for a specific wallet.</li>
+<li><code>GET /loyalty/wallets/{wallet}/refund</code>: Show refund modal for a specific wallet.</li>
+<li><code>POST /loyalty/wallets/refund</code>: Refund points.</li>
+<li><code>GET /loyalty/wallets/{wallet}/adjust</code>: Show adjust modal for a specific wallet.</li>
+<li><code>POST /loyalty/wallets/{wallet}/adjust</code>: Adjust points for a specific wallet.</li>
+<li><code>GET /loyalty/wallets/{wallet}/mint-modal</code>: Show mint modal for a specific wallet.</li>
+<li><code>POST /loyalty/wallets/{wallet}/mint</code>: Mint points for a specific wallet.</li>
+<li><code>GET /loyalty/wallets/{wallet}/ledger</code>: Show ledger for a specific wallet.</li>
+<li><code>GET /loyalty/wallets/available/{member}</code>: List available wallets for a specific member.</li>
 </ul>
 <h3 id="controllers">Controllers</h3>
-<p>The <code>MemberController</code> is responsible for handling member-related operations. Here are some key methods:</p>
+<p>The <code>WalletController</code> manages wallet operations:</p>
 <ul>
 <li><strong>Index</strong></li>
-<li>
-<p><code>index()</code>: List all members.</p>
-</li>
-<li>
-<p><strong>Create</strong></p>
-</li>
-<li>
-<p><code>create()</code>: Show form to create a new member. Retrieves contacts and business users who are not yet members.</p>
-</li>
-<li>
-<p><strong>Store</strong></p>
-</li>
-<li>
-<p><code>store(Request $request)</code>: Store a new member. Validates input data, marks the entity as a member, creates a primary wallet, and initializes a points summary.</p>
-</li>
-<li>
-<p><strong>Wallets</strong></p>
-</li>
-<li>
-<p><code>wallets(Member $member)</code>: List wallets for a specific member.</p>
-</li>
-<li>
-<p><strong>Dashboard</strong></p>
-</li>
-<li><code>dashboard(Request $request, Member $member, TierServiceInterface $tierService)</code>: Show dashboard for a specific member. Displays wallet details, points summary, tier progress, transactions, and available rewards.</li>
+<li><code>index()</code>: List all wallets.</li>
+<li><strong>Create</strong></li>
+<li><code>create(Request $request, WalletServiceInterface $walletService)</code>: Create a new wallet.</li>
+<li><strong>Get Balance</strong></li>
+<li><code>getBalance(Wallet $wallet)</code>: Get wallet balance.</li>
+<li><strong>Earn Modal</strong></li>
+<li><code>earnModal(Member $member)</code>: Show modal to earn points.</li>
+<li><strong>Earn Points</strong></li>
+<li><code>earnFromErp</code>, <code>earnFromPos</code>, <code>earnFromEcommerce</code>: Earn points from different channels.</li>
+<li><strong>Redeem Modal</strong></li>
+<li><code>redeemModal(Wallet $wallet)</code>: Show modal to redeem rewards.</li>
+<li><strong>Redeem Reward</strong></li>
+<li><code>redeem(Request $request, Wallet $wallet, RewardServiceInterface $rewardService)</code>: Redeem a reward.</li>
+<li><strong>Refund Modal</strong></li>
+<li><code>refundModal(Wallet $wallet)</code>: Show modal to refund points.</li>
+<li><strong>Refund Points</strong></li>
+<li><code>refund(Request $request, PointRefundServiceInterface $refundService)</code>: Refund points.</li>
+<li><strong>Adjust Modal</strong></li>
+<li><code>adjustModal(Wallet $wallet)</code>: Show modal to adjust points.</li>
+<li><strong>Adjust Points</strong></li>
+<li><code>adjust(Request $request, Wallet $wallet, PointAdjustmentServiceInterface $adjustService)</code>: Adjust points.</li>
+<li><strong>Mint Modal</strong></li>
+<li><code>mintModal(Wallet $wallet)</code>: Show modal to mint points.</li>
+<li><strong>Mint Points</strong></li>
+<li><code>mint(Request $request, Wallet $wallet, PointAdjustmentServiceInterface $adjustService)</code>: Mint points.</li>
+<li><strong>Ledger</strong></li>
+<li><code>ledger(Wallet $wallet)</code>: View wallet transaction ledger.</li>
+<li><strong>Available Wallets</strong></li>
+<li><code>availableWallets(Request $request, Member $member)</code>: Get available member wallets.</li>
 </ul>
 <h3 id="entities">Entities</h3>
-<p>The <code>Member</code> entity represents a member in the system. Here are the key attributes:</p>
+<p>The <code>Wallet</code> entity stores points for members or the business:</p>
 <ul>
-<li><code>id</code>: Unique identifier for the member.</li>
-<li><code>member_code</code>: Unique code for the member.</li>
-<li><code>memberable_id</code>: ID of the memberable entity (either a <code>Contact</code> or <code>BusinessUser</code>).</li>
-<li><code>memberable_type</code>: Type of the memberable entity (either <code>App\Models\Contact\Contact</code> or <code>App\Models\BusinessUser</code>).</li>
-<li><code>is_active</code>: Boolean indicating whether the member is active.</li>
-</ul>
-<p>The <code>MemberPointsSummary</code> entity keeps track of the points summary for each member. Here are the key attributes:</p>
-<ul>
-<li><code>id</code>: Unique identifier for the points summary.</li>
-<li><code>member_id</code>: ID of the member.</li>
+<li><code>id</code>: Unique identifier.</li>
+<li><code>owner_id</code>: ID of the owner (Member or PointType).</li>
+<li><code>owner_type</code>: Type of owner (Member or PointType).</li>
 <li><code>point_type_id</code>: ID of the point type.</li>
-<li><code>total_earned</code>: Total points earned by the member.</li>
-<li><code>total_redeemed</code>: Total points redeemed by the member.</li>
-<li><code>total_expired</code>: Total points expired by the member.</li>
-<li><code>balance</code>: Current balance of points for the member.</li>
+<li><code>balance</code>: Current points balance.</li>
+<li><code>is_primary</code>: Boolean indicating primary wallet.</li>
+<li><code>status</code>: Wallet status (e.g., active).</li>
 </ul>
 <h3 id="services">Services</h3>
-<p>The <code>TierServiceInterface</code> defines methods for handling tiers:</p>
+<p>The <code>WalletServiceInterface</code>, <code>PointEarningServiceInterface</code>, <code>RewardServiceInterface</code>, <code>PointRefundServiceInterface</code>, and <code>PointAdjustmentServiceInterface</code> handle wallet and point operations:</p>
 <ul>
-<li><strong>Get Member Tier</strong></li>
-<li>
-<p><code>getMemberTier(Member $member): ?Tier</code>: Get the tier for a specific member.</p>
-</li>
-<li>
-<p><strong>Apply Tier Multiplier</strong></p>
-</li>
-<li>
-<p><code>applyTierMultiplier(Member $member, float $points): float</code>: Apply the tier multiplier to points earned by a member.</p>
-</li>
-<li>
-<p><strong>Get All Tiers</strong></p>
-</li>
-<li>
-<p><code>getAllTiers(): Collection&lt;int, Tier&gt;</code>: Get all tiers in ascending order of required points.</p>
-</li>
-<li>
-<p><strong>Get Next Tier</strong></p>
-</li>
-<li><code>getNextTier(Member $member): ?Tier</code>: Get the next tier based on a member's total earned points.</li>
+<li><strong>WalletService</strong>: Creates or retrieves wallets.</li>
+<li><strong>PointEarningService</strong>: Manages point earning from purchases or other sources.</li>
+<li><strong>RewardService</strong>: Handles reward redemption.</li>
+<li><strong>PointRefundService</strong>: Processes point refunds.</li>
+<li><strong>PointAdjustmentService</strong>: Adjusts or mints points.</li>
 </ul>
 <h2 id="workflow">WORKFLOW</h2>
 <ul>
-<li><strong>Create Member</strong>:
-<pre class="mermaid"><code>  graph TD
-    A[Start: POST /loyalty/members] --&gt; B{Authenticate User}
+<li><strong>Create Wallet</strong>: 
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets] --&gt; B{Authenticate User}
     B --&gt;|Authorized| C{Validate Request}
     B --&gt;|Unauthorized| D[Return 403]
-    C --&gt;|Valid memberable_type, id| E[Begin Transaction]
+    C --&gt;|Valid owner_id, owner_type, point_type_id| E[Call WalletService::getWallet]
     C --&gt;|Invalid| F[Return Validation Error]
-    E --&gt; G[Fetch Memberable]
-    G --&gt; H{Exists?}
-    H --&gt;|Yes| I[Mark is_member = true]
-    H --&gt;|No| J[Rollback]
-    I --&gt; K[Create Member]
-    K --&gt; L[Fetch PointType]
-    L --&gt; M{Check PointType}
-    M --&gt;|Exists| N[Create Primary Wallet]
-    M --&gt;|Not Found| J
-    N --&gt; O[Initialize PointsSummary]
-    O --&gt; P[Commit Transaction]
-    P --&gt; Q[Return Success]
-    J --&gt; R[Rollback Transaction]
-    R --&gt; S[Return Error]
-    Q --&gt; T[End]
-    S --&gt; T</code></pre></li>
-<li><strong>Render Member Dashboard</strong>:
+    E --&gt; G[Redirect with Success]
+    G --&gt; H[End]</code></pre></li>
+<li><strong>Earn Points from POS</strong>:
 <pre class="mermaid"><code>graph TD
-    A[Start: GET /loyalty/members/member_id/dashboard] --&gt; B{Authenticate User}
-    B --&gt;|Authorized| C{Can View Member?}
+    A[Start: POST /loyalty/wallets/earn/pos] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
     B --&gt;|Unauthorized| D[Return 403]
-    C --&gt;|Yes| E[Fetch Member]
-    C --&gt;|No| D
-    E --&gt; F[Fetch Primary Wallet]
-    F --&gt; G{PointsSummary Exists?}
-    G --&gt;|Yes| H[Load Summary]
-    G --&gt;|No| I[Create Summary]
-    H --&gt; J[Get Current Tier]
-    I --&gt; J
-    J --&gt; K[Get Next Tier]
-    K --&gt; L{Calculate Progress}
-    L --&gt;|Next Tier Exists| M[Use Formula]
-    L --&gt;|No Next Tier| N[Progress = 100]
-    M --&gt; O[Fetch Last 10 Transactions]
-    N --&gt; O
-    O --&gt; P[Fetch Eligible Rewards]
-    P --&gt; Q[Prepare Chart Data]
-    Q --&gt; R[Render Dashboard View]
-    R --&gt; S[End]</code></pre></li>
+    C --&gt;|Valid wallet_id, amount| E[Fetch Wallet]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G{Check Wallet Exists?}
+    G --&gt;|Yes| H[Call earnFromPurchase]
+    G --&gt;|No| I[Return 404]
+    H --&gt; J{AJAX Request?}
+    J --&gt;|Yes| K[Return JSON Success]
+    J --&gt;|No| L[End]
+    K --&gt; M[End]</code></pre></li>
+<li><strong>Redeem Reward</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets/redeem] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid reward_id| E[Fetch Reward]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G{Fetch Member Tier}
+    G --&gt; H{Check Tier Eligibility}
+    H --&gt;|Eligible| I[Check Gold Tier]
+    H --&gt;|Not Eligible| J[Return 422 Error]
+    I --&gt; K{Apply Free Shipping?}
+    K --&gt;|Yes| L[Set Free Shipping]
+    K --&gt;|No| M[Call redeemReward]
+    L --&gt; M
+    M --&gt; N{AJAX Request?}
+    N --&gt;|Yes| O[Return JSON Success]
+    N --&gt;|No| P[Redirect with Success]
+    O --&gt; Q[End]
+    P --&gt; Q
+    J --&gt; Q</code></pre></li>
+<li><strong>Refund Points</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets/refund] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid wallets, amount, reference| E[Fetch Wallets]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G{Check Business-to-Member?}
+    G --&gt;|Yes| H[Call refundPoints]
+    G --&gt;|No| I[Return 422 Error]
+    H --&gt; J{AJAX Request?}
+    J --&gt;|Yes| K[Return JSON Success]
+    J --&gt;|No| L[Redirect with Success]
+    K --&gt; M[End]
+    L --&gt; M
+    I --&gt; M</code></pre></li>
+<li><strong>Adjust Points</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets/adjust] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Validate Request}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Valid amount, reason| E[Call adjustPoints]
+    C --&gt;|Invalid| F[Return Validation Error]
+    E --&gt; G{AJAX Request?}
+    G --&gt;|Yes| H[Return JSON Success]
+    G --&gt;|No| I[Redirect with Success]
+    H --&gt; J[End]
+    I --&gt; J</code></pre></li>
+<li><strong>Mint Points</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: POST /loyalty/wallets/mint] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C{Check Business Wallet?}
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt;|Yes| E{Validate Request}
+    C --&gt;|No| F[Return Error]
+    E --&gt;|Valid amount, reason| G[Call mintPoints]
+    E --&gt;|Invalid| H[Return Validation Error]
+    G --&gt; I{AJAX Request?}
+    I --&gt;|Yes| J[Return JSON Success]
+    I --&gt;|No| K[Redirect with Success]
+    J --&gt; L[End]
+    K --&gt; L
+    F --&gt; L</code></pre></li>
+<li><strong>View Ledger</strong>:
+<pre class="mermaid"><code>graph TD
+    A[Start: GET /loyalty/wallets/ledger] --&gt; B{Authenticate User}
+    B --&gt;|Authorized| C[Fetch PointTransactions]
+    B --&gt;|Unauthorized| D[Return 403]
+    C --&gt; E[Load Wallet Owner]
+    E --&gt; F[Format Owner Name]
+    F --&gt; G[Normalize Source]
+    G --&gt; H[Format Transactions]
+    H --&gt; I[Render Ledger View]
+    I --&gt; J[End]</code></pre></li>
 </ul>
 
 
