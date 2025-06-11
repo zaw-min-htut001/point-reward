@@ -266,15 +266,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#database-schema" class="md-nav__link">
     <span class="md-ellipsis">
       Database Schema
@@ -525,15 +516,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      Components
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#database-schema" class="md-nav__link">
     <span class="md-ellipsis">
       Database Schema
@@ -569,36 +551,6 @@
 
 <h1 id="architecture">Architecture</h1>
 <p>The Member Points Loyalty Program is a modular Laravel application (<code>Modules\DiscountManagement</code>) for managing loyalty points, tiers, rewards, and campaigns.</p>
-<h2 id="components">Components</h2>
-<ul>
-<li><strong>Entities</strong>:</li>
-<li><code>Member</code>: Polymorphic (<code>memberable_id</code>, <code>memberable_type</code>) linked to <code>Contact</code> or <code>BusinessUser</code>.</li>
-<li><code>Wallet</code>: Stores points (<code>balance</code>) with <code>point_type_id</code>, <code>is_primary</code>.</li>
-<li><code>PointType</code>: Defines points (<code>name</code>, <code>is_expirable</code>, <code>default_expiry_days</code>, <code>exchange_rate</code>).</li>
-<li><code>Reward</code>: Redeemable items (<code>point_cost</code>, <code>type</code>, <code>stock</code>, <code>min_tier_id</code>).</li>
-<li><code>Tier</code>: Tiers (<code>min_points</code>, <code>multiplier</code>, <code>perks</code>).</li>
-<li><code>MemberPointsSummary</code>: Tracks <code>total_earned</code>, <code>total_redeemed</code>, <code>total_expired</code>, <code>balance</code>.</li>
-<li><code>PointTransaction</code>: Logs changes (<code>amount</code>, <code>direction</code>, <code>transaction_type</code>, <code>meta</code>).</li>
-<li><code>Campaign</code>: Defines reward promotions (<code>name</code>, <code>start_date</code>, <code>end_date</code>).</li>
-<li><strong>Services</strong>:</li>
-<li><code>TierService</code>: Calculates tiers (<code>getMemberTier</code>, <code>getNextTier</code>).</li>
-<li><code>RewardService</code>: Manages redemption.</li>
-<li><strong>Controllers</strong>:</li>
-<li><code>PointTypeController</code>: Manages point types.</li>
-<li><code>MemberController</code>: Handles members and dashboard.</li>
-<li><code>WalletController</code>: Manages earning/redeeming points.</li>
-<li><code>TierController</code>: Tier CRUD.</li>
-<li><code>RewardController</code>: Reward CRUD.</li>
-<li><code>CampaignController</code>: Campaign management.</li>
-<li><code>TransactionController</code>: Transaction views.</li>
-<li><code>DashboardController</code>: System overview.</li>
-<li><strong>Views</strong>:</li>
-<li><code>point-types/*</code>: Point type management.</li>
-<li><code>members/*</code>: Member operations and dashboard.</li>
-<li><code>wallets/*</code>: Wallet actions.</li>
-<li><strong>Enums</strong>:</li>
-<li><code>TransactionType</code>: <code>EARN</code>, <code>REDEEM</code>, <code>REFUND</code>, <code>ADJUST</code>, <code>MINT</code>.</li>
-</ul>
 <h2 id="database-schema">Database Schema</h2>
 <table>
 <thead>
@@ -652,74 +604,56 @@
 </tbody>
 </table>
 <h2 id="erd">ERD</h2>
-<pre class="mermaid"><code>erDiagram
-    MEMBER ||--o{ WALLET : owns
-    MEMBER ||--o{ MEMBER_POINTS_SUMMARY : has
-    WALLET ||--o{ POINT_TRANSACTION : has
-    REWARD ||--o{ TIER : requires
-    POINT_TYPE ||--o{ WALLET : defines
-    CAMPAIGN ||--o{ REWARD : promotes</code></pre>
-<pre><code>MEMBER {
+<pre class="mermaid"><code>graph TD
+    A[Start] --&gt; B[Create Point Type]
+    B --&gt; C[Create Primary Wallet]
+    C --&gt; D[Admin Creates Member]
+    D --&gt; E[Create Member Wallet]
+    E --&gt; F[Select Action]
+    F --&gt;|Earn| G[Call earnFromPurchase]
+    F --&gt;|Redeem| H[Call redeemPoints/redeemReward]
+    F --&gt;|Adjust| I[Call adjustPoints]
+    F --&gt;|Mint| J[Call mintPoints]
+    F --&gt;|Refund| K[Call refundPoints]
+    G --&gt; L[Update Wallet Balance]
+    H --&gt; L
+    I --&gt; L
+    J --&gt; L
+    K --&gt; L
+    L --&gt; M[Log PointTransaction]
+    M --&gt; N[Log WalletTransaction]
+    N --&gt; O[End]</code></pre>
+<pre class="mermaid"><code>classDiagram
+class Member {
     int id
     int memberable_id
     string memberable_type
     string member_code
     boolean is_active
-    timestamp created_at
-    timestamp updated_at
+    timestamps
 }
-WALLET {
+
+class Wallet {
     int id
     int owner_id
     string owner_type
     float balance
     int point_type_id
-    boolean is_primary
+    bool is_primary
     string status
-    timestamp created_at
-    timestamp updated_at
+    timestamps
 }
-POINT_TYPE {
+
+class PointType {
     int id
     string name
-    boolean is_expirable
+    bool is_expirable
     int default_expiry_days
     float exchange_rate
-    timestamp created_at
-    timestamp updated_at
+    timestamps
 }
-REWARD {
-    int id
-    string name
-    string description
-    float point_cost
-    string type
-    int stock nullable
-    int min_tier_id nullable
-    timestamp created_at
-    timestamp updated_at
-}
-TIER {
-    int id
-    string name
-    float min_points
-    float multiplier
-    string perks nullable
-    timestamp created_at
-    timestamp updated_at
-}
-MEMBER_POINTS_SUMMARY {
-    int id
-    int member_id
-    int point_type_id
-    float total_earned
-    float total_redeemed
-    float total_expired
-    float balance
-    timestamp created_at
-    timestamp updated_at
-}
-POINT_TRANSACTION {
+
+class PointTransaction {
     int id
     int wallet_id
     int point_type_id
@@ -727,20 +661,66 @@ POINT_TRANSACTION {
     string direction
     string transaction_type
     string source
-    string description nullable
-    json meta nullable
-    timestamp created_at
-    timestamp updated_at
+    string description
+    json meta
+    datetime expires_at
+    timestamps
 }
-CAMPAIGN {
+
+class MemberPointsSummary {
+    int id
+    int member_id
+    int point_type_id
+    float total_earned
+    float total_redeemed
+    float total_expired
+    float balance
+    timestamps
+}
+
+class Reward {
     int id
     string name
+    string description
+    float point_cost
+    string type
+    int stock
+    int min_tier_id
+    timestamps
+}
+
+class Tier {
+    int id
+    string name
+    float min_points
+    float multiplier
+    string perks
+    timestamps
+}
+
+class PromoCampaign {
+    int id
+    string name
+    int point_type_id
+    float total_budget
+    float issued_so_far
     date start_date
     date end_date
-    timestamp created_at
-    timestamp updated_at
+    boolean active
+    timestamps
 }
-</code></pre>
+
+class WalletTransaction {
+    int id
+    int from_wallet_id
+    int to_wallet_id
+    float amount
+    string transaction_type
+    string reference_type
+    int reference_id
+    string status
+    timestamps
+}</code></pre>
 
 
 
